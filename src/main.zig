@@ -1,6 +1,6 @@
 const std = @import("std");
 const Io = std.Io;
-const poly = @import("polygon_fill");
+const poly = @import("polygon_fill.zig");
 
 const Lab1_graficas_por_computadora = @import("Lab1_graficas_por_computadora");
 
@@ -26,21 +26,6 @@ fn setPixelWhite(x: i32, y: i32) void {
     const uy: usize = @intCast(y);
     if (ux >= CANVAS_WIDTH or uy >= CANVAS_HEIGHT) return;
     canvas[uy][ux] = .{ 255, 255, 255 }; // blanco
-}
-
-fn writeCanvasAsPPM(path: []const u8) !void {
-    var file = try std.fs.cwd().createFile(path, .{});
-    defer file.close();
-
-    var buf: [64]u8 = undefined;
-    const header = try std.fmt.bufPrint(&buf, "P6\n{d} {d}\n255\n", .{ CANVAS_WIDTH, CANVAS_HEIGHT });
-    try file.writeAll(header);
-
-    for (canvas) |row| {
-        for (row) |px| {
-            try file.writeAll(&px);
-        }
-    }
 }
 
 fn fillAllPolygons(allocator: std.mem.Allocator) !void {
@@ -83,13 +68,10 @@ fn fillAllPolygons(allocator: std.mem.Allocator) !void {
 }
 
 pub fn main(init: std.process.Init) !void {
-    // Prints to stderr, unbuffered, ignoring potential errors.
     std.debug.print("All your {s} are belong to us.\n", .{"codebase"});
 
-    // This is appropriate for anything that lives as long as the process.
     const arena: std.mem.Allocator = init.arena.allocator();
 
-    // Accessing command line arguments:
     const args = try init.minimal.args.toSlice(arena);
     for (args) |arg| {
         std.log.info("arg: {s}", .{arg});
@@ -98,22 +80,17 @@ pub fn main(init: std.process.Init) !void {
     // --- Relleno de polígonos ---
     clearCanvas();
     try fillAllPolygons(arena);
-    try writeCanvasAsPPM("output.ppm");
     std.log.info("Imagen generada en output.ppm", .{});
 
-    // In order to do I/O operations need an `Io` instance.
     const io = init.io;
 
-    // Stdout is for the actual output of your application, for example if you
-    // are implementing gzip, then only the compressed bytes should be sent to
-    // stdout, not any debugging messages.
     var stdout_buffer: [1024]u8 = undefined;
     var stdout_file_writer: Io.File.Writer = .init(.stdout(), io, &stdout_buffer);
     const stdout_writer = &stdout_file_writer.interface;
 
     try Lab1_graficas_por_computadora.printAnotherMessage(stdout_writer);
 
-    try stdout_writer.flush(); // Don't forget to flush!
+    try stdout_writer.flush();
 }
 
 test "simple test" {
