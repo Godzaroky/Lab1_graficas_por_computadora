@@ -25,8 +25,8 @@ pub fn fillPolygon(
     const y_start: i32 = @intFromFloat(@ceil(min_y));
     const y_end: i32 = @intFromFloat(@floor(max_y));
 
-    var intersections = std.ArrayList(f32).init(allocator);
-    defer intersections.deinit();
+    var intersections: std.ArrayList(f32) = .empty;
+    defer intersections.deinit(allocator);
 
     var y = y_start;
     while (y <= y_end) : (y += 1) {
@@ -43,7 +43,7 @@ pub fn fillPolygon(
             if ((yf >= p1.y and yf < p2.y) or (yf >= p2.y and yf < p1.y)) {
                 const t = (yf - p1.y) / (p2.y - p1.y);
                 const x = p1.x + t * (p2.x - p1.x);
-                try intersections.append(x);
+                try intersections.append(allocator, x);
             }
         }
 
