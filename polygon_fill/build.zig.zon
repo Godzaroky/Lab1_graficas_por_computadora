@@ -1,0 +1,30 @@
+.{
+    .name = .polygon_fill,
+    .version = "0.1.0",
+    .minimum_zig_version = "0.14.0",
+
+    // Zig 0.14+ exige este campo. La primera vez que corras `zig build`,
+    // si falta o no coincide, el compilador te va a IMPRIMIR el valor
+    // correcto sugerido (algo como 0xe35841a04984176) -- copialo aqui tal
+    // cual te lo muestre la terminal.
+    .fingerprint = 0xf0024623866748c7,
+
+    .dependencies = .{
+        .raylib = .{
+            // Usamos la rama master de raylib (no el tag 5.5) porque ya
+            // tiene su build.zig.zon actualizado al formato de Zig 0.14+;
+            // el tag 5.5 es previo a ese cambio y falla con "expected enum literal".
+            .url = "https://github.com/raysan5/raylib/archive/refs/heads/master.tar.gz",
+            .hash = "raylib-6.0.0-whq8uFXaOwWGeVwKn5UjBm7bjKQOk2CMaXw-QPHfWang",
+            // Este hash lo confirmo Zig directamente en el mensaje de error
+            // "dependency is missing hash field" -- si raylib actualiza su
+            // master mas adelante, corre de nuevo `zig fetch --save <url>`
+            // para refrescarlo.
+        },
+    },
+    .paths = .{
+        "build.zig",
+        "build.zig.zon",
+        "src",
+    },
+}
