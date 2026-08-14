@@ -6,8 +6,6 @@ const rl = @cImport({
 const SCREEN_W: i32 = 800;
 const SCREEN_H: i32 = 450;
 
-// Maximo de intersecciones por linea de barrido. Con polígonos de hasta
-// ~120 vertices sobra de sobra; se puede subir si algun polígono creciera.
 const MAX_INTERSECTIONS = 256;
 
 const Point = struct { x: f32, y: f32 };
@@ -61,9 +59,6 @@ fn scanlineFill(polygon: Polygon) void {
             const y1 = p1.y;
             const y2 = p2.y;
 
-            // Intervalo semi-abierto [min(y1,y2), max(y1,y2)) para no
-            // contar dos veces un vertice compartido por dos aristas,
-            // y para ignorar automaticamente las aristas horizontales.
             if ((y1 <= fy and y2 > fy) or (y2 <= fy and y1 > fy)) {
                 const t = (fy - y1) / (y2 - y1);
                 const x = p1.x + t * (p2.x - p1.x);
@@ -78,8 +73,6 @@ fn scanlineFill(polygon: Polygon) void {
 
         var j: usize = 0;
         while (j + 1 < count) : (j += 2) {
-            // ceil/floor (en vez de round) para quedarnos dentro del
-            // borde real y no pintar por fuera de la linea del poligono.
             const x_start: i32 = @intFromFloat(@ceil(xs[j]));
             const x_end: i32 = @intFromFloat(@floor(xs[j + 1]));
             var x = x_start;
@@ -106,7 +99,7 @@ fn drawOutline(polygon: Polygon) void {
     }
 }
 
-// --- Datos de los poligonos (tomados directamente del enunciado) --------
+// --- Datos de los poligonos --------
 
 const poly1_pts = [_]Point{
     .{ .x = 165, .y = 380 }, .{ .x = 185, .y = 360 }, .{ .x = 180, .y = 330 },
@@ -124,7 +117,7 @@ const poly3_pts = [_]Point{
     .{ .x = 377, .y = 249 }, .{ .x = 411, .y = 197 }, .{ .x = 436, .y = 249 },
 };
 
-// Poligono 4: contiene el "agujero" hecho con tecnica de ranura (slit).
+// Poligono 4: contiene el agujero hecho con tecnica de ranura (slit).
 const poly4_pts = [_]Point{
     .{ .x = 413, .y = 177 }, .{ .x = 448, .y = 159 }, .{ .x = 502, .y = 88 },
     .{ .x = 553, .y = 53 },  .{ .x = 535, .y = 36 },  .{ .x = 676, .y = 37 },
@@ -144,8 +137,6 @@ pub fn main() void {
     defer rl.CloseWindow();
     rl.SetTargetFPS(60);
 
-    // Asigna aqui el color de relleno/linea que corresponda a cada
-    // poligono segun lo que pida tu enunciado especifico.
     const polygons = [_]Polygon{
         .{ .points = &poly1_pts, .fill = rl.SKYBLUE, .line = rl.DARKBLUE },
         .{ .points = &poly2_pts, .fill = rl.GREEN, .line = rl.DARKGREEN },
@@ -169,8 +160,6 @@ pub fn main() void {
 
         rl.EndDrawing();
 
-        // Guarda out.png automaticamente en el primer frame, y tambien
-        // permite volver a guardarlo a mano con la tecla S.
         if (!saved or rl.IsKeyPressed(rl.KEY_S)) {
             rl.TakeScreenshot("out.png");
             saved = true;
