@@ -46,17 +46,4 @@ al cache de Zig.
 **Controles:** `SPACE` pausa/reanuda la simulación, `ESC` o cerrar la
 ventana termina el programa.
 
-## Grabar el GIF para la entrega
-
-1. Corre `zig build run` y deja la ventana visible con la simulación
-   corriendo unos 10-15 segundos (para que se alcancen a ver colisiones
-   entre naves y el pulsar completar al menos un ciclo).
-2. Graba la pantalla con alguna herramienta simple:
-   - **Linux**: [Peek](https://github.com/phw/peek) (`sudo apt install peek`) exporta directo a `.gif`.
-   - **Windows**: [ScreenToGif](https://www.screentogif.com/).
-   - **macOS**: [Gifski](https://gif.ski/) + grabación con QuickTime, o `Kap`.
-3. Guarda el archivo como `demo.gif` en esta carpeta (o en la raíz del
-   repo) y súbelo:
-   - Al **README de tu repo de git** (arriba de todo, con
-     `![demo](./game_of_life/demo.gif)`).
-   - Al **servidor de Discord de la clase**, como pide la consigna.
+![Demo del Laboratorio 2](./gif_game_of_life.gif)
