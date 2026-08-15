@@ -1,0 +1,26 @@
+.{
+    .name = .game_of_life,
+    .version = "0.1.0",
+    .minimum_zig_version = "0.14.0",
+
+    // Zig 0.14+ exige este campo. La primera vez que corras `zig build`,
+    // si falta o no coincide, el compilador te va a IMPRIMIR el valor
+    // correcto sugerido -- copialo aqui tal cual te lo muestre la terminal.
+    .fingerprint = 0x2937c9e25de2c92f,
+
+    .dependencies = .{
+        .raylib = .{
+            // Mismo pin que polygon_fill: rama master de raylib, ya
+            // actualizada al formato de Zig 0.14+.
+            .url = "https://github.com/raysan5/raylib/archive/refs/heads/master.tar.gz",
+            .hash = "raylib-6.0.0-whq8uIPTKwXybRNNu7BJNM6bxip5fYUgAh-bctTa7oHR",
+            // Si raylib actualiza su master mas adelante y este hash falla,
+            // corre `zig fetch --save <url>` para refrescarlo.
+        },
+    },
+    .paths = .{
+        "build.zig",
+        "build.zig.zon",
+        "src",
+    },
+}
